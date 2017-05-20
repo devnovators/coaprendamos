@@ -60,7 +60,7 @@
                   self.retos = [];
                   snapshot.forEach(function(element) {
                       var reto = element.val();
-                      if(reto.descripcion.indexOf(query) !== -1){
+                      if(reto.descripcion.toUpperCase().indexOf(query.toUpperCase()) !== -1){
                         console.log(reto);
                         reto.creator = element.val().creator;
                         self.push('retos', reto);
