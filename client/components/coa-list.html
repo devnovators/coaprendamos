@@ -4,6 +4,7 @@
     <template id="tmpCoaList">
         <style include="about-estilo"></style>
         <style include="kudos"></style>
+        <style include="cards"></style>
 
         <paper-search-bar id="btnBuscar"
           placeholder="Buscar..."
@@ -15,7 +16,9 @@
 
             <template id="list" is="dom-repeat" items="{{retos}}" as="reto">
                 <paper-card style="width:100%">
-                    <p>{{reto.creator}} quiere {{reto.descripcion}} para {{reto.motivo}} y ofrece {{reto.retribucion}}</p>
+                    <div>{{reto.creator}} quiere 
+                        <div class="hashReto">{{reto.descripcion}}</div> 
+                        para <div class="hashReto">{{reto.motivo}}</div> y ofrece <div class="hashReto">{{reto.retribucion}}</div></div>
                     <paper-button toggles raised>
                         <iron-icon icon="favorite"></iron-icon>Me apunto</paper-button>
 

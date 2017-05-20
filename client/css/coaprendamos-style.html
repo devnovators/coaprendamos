@@ -6,6 +6,8 @@
       padding: 1px;
       height: 100vh;
     }
+
+
     .paper-header {
       height: 60px;
       font-size: 16px;
@@ -17,7 +19,7 @@
     }
 
     #feedback{
-        z-index: 99999 !important;
+        --z-index: 99999 !important;
     }
 
     paper-card {
@@ -30,6 +32,15 @@
     }
     paper-card.rate {
       @apply(--layout-horizontal);
+    }
+    paper-card p {
+      display: inline-block;
+    font-size: 1.1em;
+    }
+    paper-card .hashReto {
+      display: table-cell;
+      font-weight: bold;
+      color: #094FA4;
     }
     .rate-content {
       width: 100%;
