@@ -1,16 +1,14 @@
 {
-  "name": "kudos",
-  "homepage": "https://github.com/devnovators/macrocomite",
+  "name": "coaprendamos",
+  "homepage": "https://github.com/devnovators/coaprendamos",
   "authors": [
     "devnovators"
   ],
-  "description": "BBVA Kudos",
+  "description": "Coaprendamos.pe",
   "main": "index.html",
   "keywords": [
-    "kudos",
-    "macrocomite",
-    "demo",
-    "pi",
+    "aprendamos",
+    "hackatrix",
     "devnovators",
     "hack"
   ],
