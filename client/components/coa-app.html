@@ -36,7 +36,6 @@
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
 <link rel="import" href="../bower_components/paper-search/paper-search-bar.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="coa-post.html">
 <link rel="import" href="coa-about.html">
 <link rel="import" href="coa-bot.html">
 <link rel="import" href="coa-list.html">
@@ -95,27 +94,26 @@
                         <div><span style="font-size: 3.5vmin;" class="logo">coAPRENDAMOS.pe! &nbsp;&nbsp;&nbsp;#AprenderEsSexy</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
-                        <paper-icon-button icon="find-in-page" id="mBot"    title="Bot"    on-tap="showChatbot"></paper-icon-button>
-                        <paper-icon-button icon="help"        id="mHelp"   title="Acerca de"    on-tap="showAbout"></paper-icon-button>
-                        <paper-icon-button icon="exit-to-app" id="mExit"   title="Salir"        on-tap="signOut"  ></paper-icon-button>
-                        <paper-tooltip for="mHelp"   position="bottom" style="max-width:100px;">Ayuda</paper-tooltip>
-                        <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
+                        <paper-icon-button icon="find-in-page" id="mBot" title="Bot" on-tap="showChatbot"></paper-icon-button>
+                        <paper-icon-button icon="help" id="mHelp" title="Acerca de" on-tap="showAbout"></paper-icon-button>
+                        <paper-icon-button icon="exit-to-app" id="mExit" title="Salir" on-tap="signOut"></paper-icon-button>
+                        <paper-tooltip for="mHelp" position="bottom" style="max-width:100px;">Ayuda</paper-tooltip>
+                        <paper-tooltip for="mExit" position="bottom" style="max-width:100px;">Salir</paper-tooltip>
                     </app-toolbar>
                 </app-header>
-                <coa-post  id="post"  style="display:none"></coa-post>
                 <coa-about id="about" style="display:none"></coa-about>
                 <coa-bot id="chbot" class="chbot" style="display:none"></coa-bot>
             </app-header-layout>
         </div>
         <coa-list id="list" style="display:none"></coa-list>
-        <paper-fab icon="add" title="Reto" class="blue" onclick="modal.open()"></paper-fab>
+        <paper-fab icon="add" title="Reto" class="blue" on-click="showModal"></paper-fab>
         <paper-dialog id="modal">
-            <paper-input always-float-label label="Yo Lobito quiero"></paper-input>
-            <paper-input always-float-label label="Para"></paper-input>
-            <paper-input always-float-label label="y ofrezco"></paper-input>
+            <paper-input id="descripcion" always-float-label label="Yo Lobito quiero"></paper-input>
+            <paper-input id="motivo" always-float-label label="Para"></paper-input>
+            <paper-input id="retribucion" always-float-label label="y ofrezco"></paper-input>
             <div class="buttons">
                 <paper-button raised dialog-confirm>Cerrar</paper-button>
-                <paper-button raised dialog-confirm>Lanzar Reto</paper-button>
+                <paper-button raised on-click="lanzarReto">Lanzar Reto</paper-button>
             </div>
         </paper-dialog>
     </template>
@@ -181,7 +179,7 @@
                 }
             },
             showRetos: function () {
-              console.log("estoy en retos");
+                console.log("estoy en retos");
                 if (this.logged) {
                     this.$.list.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
                 }
@@ -206,6 +204,29 @@
             signOut: function () {
                 firebase.auth().signOut();
                 this.set('logged', false);
+            },
+            showModal: function(){
+                this.$.modal.open();
+            },
+            lanzarReto: function () {
+                var db = firebase.database();
+                var ref = db.ref();
+                var newPostKey = ref.child('retos').push().key;
+                var postData = {
+                    creator: "Dario",
+                    descripcion: this.$.descripcion.value,
+                    motivo: this.$.motivo.value,
+                    retribucion: this.$.retribucion.value, 
+                    suscribers: []
+                };
+                //var newPostKey = ref.child('comments').push().key;
+                var updates = {};
+                updates['/retos/' + newPostKey] = postData;
+                ref.update(updates);
+                this.$.descripcion.value="";
+                this.$.motivo.value="";
+                this.$.retribucion.value="";
+                this.$.modal.close();
             }
         });
     </script>
