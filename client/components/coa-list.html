@@ -20,8 +20,9 @@
                         <div class="hashReto">{{reto.descripcion}}</div> 
                         para <div class="hashReto">{{reto.motivo}}</div> y ofrece <div class="hashReto">{{reto.retribucion}}</div></div>
                     <paper-button toggles raised>
-                        <iron-icon icon="favorite"></iron-icon>Me apunto</paper-button>
-
+                        <iron-icon icon="image:center-focus-strong"></iron-icon>Me apunto</paper-button>
+                    </paper-button>
+                    <paper-button toggles raised on-click="chatbot">Conoceme</paper-button>
                 </paper-card>
             </template>
         </div>
@@ -65,6 +66,10 @@
                       }
                   });
               });
+            },
+            chatbot:function(e) {
+                var btnCard = Polymer.dom(e).localTarget;
+                this.fire('showChatbot', btnCard);
             }
         });
 </script>
