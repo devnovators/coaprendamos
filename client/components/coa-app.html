@@ -90,7 +90,7 @@
             <app-header-layout>
                 <app-header fixed>
                     <app-toolbar>
-                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closeChatbot" style="display:none"></paper-icon-button>
+                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closechbot" style="display:none"></paper-icon-button>
                         <div><span style="font-size: 3.5vmin;" class="logo">coAPRENDAMOS.pe! &nbsp;&nbsp;&nbsp;#AprenderEsSexy</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
@@ -148,8 +148,8 @@
                         parent.set('user', account);
                         parent.set('userName', account.displayName.split(' ')[0])
                         parent.set('userEmail', account.email);
-                        //parent.$.post.userFirstName = account.displayName.split(' ')[0];
-                        //parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
+                        parent.$.post.userFirstName = account.displayName.split(' ')[0];
+                        parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
                         parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
                         parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g, '_');
                         parent.$.list.getRetos();
@@ -166,7 +166,7 @@
                     var parent = this;
                     firebase.auth().signInWithPopup(provider).then(function (result) {
                         parent.set('logged', true);
-                        //parent.showPost();
+                        parent.showPost();
                     }).catch(function (error) { //error.code //error.message //error.credential
                         if (error.code === 'auth/account-exists-with-different-credential') {
                             alert('You have already signed up with a different auth provider for that email.');
@@ -179,25 +179,29 @@
                 }
             },
             showRetos: function () {
-                console.log("estoy en retos");
                 if (this.logged) {
-                    this.$.list.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                    this.$.list.style.display = "block"; this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                }
+            },
+            showPost: function () {
+                if (this.logged) {
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
                 }
             },
             showAbout: function () {
                 if (this.logged) {
-                    this.$.about.style.display = "block"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
                 }
             },
             showChatbot: function () {
                 if (this.logged) {
-                    this.$.about.style.display = "none"; this.$.chbot.style.display = "block"; this.$.list.style.display = "none";
+                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block"; this.$.list.style.display = "none";
                 }
                 this.$.chbot.initBot();
             },
             closeChatbot: function () {
                 if (this.logged) {
-                    this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
                 }
                 this.$.chbot.closeBot();
             },
