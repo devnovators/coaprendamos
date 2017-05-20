@@ -1,5 +1,6 @@
 <dom-module id="coa-list">
     <link rel="import" href="../css/coaprendamos-style.html">
+    <link rel="import" href="../bower_components/star-rating/star-rating.html">
 
     <template id="tmpCoaList">
         <style include="about-estilo"></style>
@@ -19,6 +20,10 @@
                     <div>{{reto.creator}} quiere 
                         <div class="hashReto">{{reto.descripcion}}</div> 
                         para <div class="hashReto">{{reto.motivo}}</div> y ofrece <div class="hashReto">{{reto.retribucion}}</div></div>
+                        <div class="valoracion-star">
+                          <star-rating stars="5" id="star_"></star-rating>
+                          {{getRating(reto.valoracion)}}
+                        </div>
                     <paper-button toggles raised>
                         <iron-icon icon="image:center-focus-strong"></iron-icon>Me apunto</paper-button>
                     </paper-button>
@@ -70,6 +75,11 @@
             chatbot:function(e) {
                 var btnCard = Polymer.dom(e).localTarget;
                 this.fire('showChatbot', btnCard);
+            }, 
+            getRating:function(valoracion) {
+                self=this;
+                self.stars=this.valoracion;
+                //self.$$('#star_').valoracion='3';
             }
         });
 </script>
