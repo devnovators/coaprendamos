@@ -16,13 +16,15 @@
 
             <template id="list" is="dom-repeat" items="{{retos}}" as="reto">
                 <paper-card style="width:100%">
-                    <div>{{reto.creator}} quiere 
-                        <div class="hashReto">{{reto.descripcion}}</div> 
+                    <div>{{reto.creator}} quiere
+                        <div class="hashReto">{{reto.descripcion}}</div>
                         para <div class="hashReto">{{reto.motivo}}</div> y ofrece <div class="hashReto">{{reto.retribucion}}</div></div>
+                    <paper-button toggles raised on-click="chatbot">
+                        <iron-icon icon="places:free-breakfast"></iron-icon>Conoceme</paper-button>
+                    </paper-button>
                     <paper-button toggles raised>
                         <iron-icon icon="image:center-focus-strong"></iron-icon>Me apunto</paper-button>
                     </paper-button>
-                    <paper-button toggles raised on-click="chatbot">Conoceme</paper-button>
                 </paper-card>
             </template>
         </div>
