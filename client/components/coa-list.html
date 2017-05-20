@@ -17,8 +17,9 @@
                 <paper-card style="width:100%">
                     <p>{{reto.creator}} quiere {{reto.descripcion}} para {{reto.motivo}} y ofrece {{reto.retribucion}}</p>
                     <paper-button toggles raised>
-                        <iron-icon icon="favorite"></iron-icon>Me apunto</paper-button>
-
+                    <iron-icon icon="favorite"></iron-icon>Me apunto
+                    </paper-button>
+                    <paper-button toggles raised on-click="chatbot">Conoceme</paper-button>
                 </paper-card>
             </template>
         </div>
@@ -62,6 +63,10 @@
                       }
                   });
               });
+            },
+            chatbot:function(e) {
+                var btnCard = Polymer.dom(e).localTarget;
+                this.fire('showChatbot', btnCard);
             }
         });
 </script>
