@@ -36,6 +36,8 @@
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="coa-post.html">
+<link rel="import" href="coa-about.html">
+<link rel="import" href="coa-bot.html">
 <dom-module id="coa-app">
     <template>
         <style is="custom-style">
@@ -75,19 +77,20 @@
             <app-header-layout>
                 <app-header fixed>
                     <app-toolbar>
-                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closechbot" style="display:none"></paper-icon-button>
+                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closeChatbot" style="display:none"></paper-icon-button>
                         <div><span style="font-size: 3.5vmin;" class="logo">coAPRENDAMOS.pe! &nbsp;&nbsp;&nbsp;#AprenderEsSexy</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
+                        <paper-icon-button icon="find-in-page" id="mBot"    title="Bot"    on-tap="showChatbot"></paper-icon-button>
                         <paper-icon-button icon="help"        id="mHelp"   title="Acerca de"    on-tap="showAbout"></paper-icon-button>
                         <paper-icon-button icon="exit-to-app" id="mExit"   title="Salir"        on-tap="signOut"  ></paper-icon-button>
                         <paper-tooltip for="mHelp"   position="bottom" style="max-width:100px;">Ayuda</paper-tooltip>
                         <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
                     </app-toolbar>
                 </app-header>
-                <coa-post id="post" style="display:none"></coa-post>
+                <coa-post  id="post"  style="display:none"></coa-post>
                 <coa-about id="about" style="display:none"></coa-about>
-                <coa-chbot id="chbot" class="chbot" style="display:none"></coa-chbot>
+                <coa-bot id="chbot" class="chbot" style="display:none"></coa-bot>
             </app-header-layout>
         </div>
     </template>
@@ -106,7 +109,7 @@
                 console.log('_userEmailChanged newVal:' + newVal + ' oldVal:' + oldVal);
             },
             ready:function() {
-                this.addEventListener('showChatbot', this.showChatbot);
+                //this.addEventListener('showChatbot', this.showChatbot);
                 firebase.initializeApp({
                     apiKey: "AIzaSyDHQtnQ83qy_ORmxto8A2P63KW9iW0tfZM",
                     authDomain: "coaprendamos.firebaseapp.com",
@@ -160,11 +163,11 @@
                     this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none";
                 }
             },
-            showChatbot:function(event) {
+            showChatbot:function() {
                 if (this.logged){
                     this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";
                 }
-                this.$.chbot.initBot(event.detail);
+                this.$.chbot.initBot();
             },
             closeChatbot:function() {
                 if (this.logged){
