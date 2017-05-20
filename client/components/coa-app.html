@@ -34,9 +34,11 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
-<link rel="import" href="../components/coa-list.html">
+<link rel="import" href="../bower_components/paper-search/paper-search-bar.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="coa-post.html">
+<link rel="import" href="coa-list.html">
+<link rel="import" href="coa-search.html">
 <dom-module id="coa-app">
     <template>
         <style is="custom-style">
@@ -86,7 +88,7 @@
                         <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
                     </app-toolbar>
                 </app-header>
-                
+
                 <coa-post id="post" style="display:none"></coa-post>
                 <coa-about id="about" style="display:none"></coa-about>
                 <coa-chbot id="chbot" class="chbot" style="display:none"></coa-chbot>

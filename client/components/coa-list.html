@@ -1,6 +1,8 @@
 <dom-module id="coa-list">
 <link rel="import" href="../css/coaprendamos-style.html">
+<link rel="import" href="coa-search.html">
 <template id="tmpCoaList">
+    <coa-search></coa-search>
     <style include="about-estilo"></style>
     <style include="kudos"></style>
     <div class="card">
@@ -22,7 +24,7 @@
 
     },
     ready: function(){
-        
+
     },
     getRetos: function (){
         var self = this;
