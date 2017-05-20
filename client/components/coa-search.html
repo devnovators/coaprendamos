@@ -1,7 +1,6 @@
 <dom-module id="coa-search">
 	<template>
-    <paper-search-bar id="btnBuscar" placeholder="Buscar retos..." disable-filter-button=true
-    hide-filter-button=true on-paper-search-search="buscar"  >
+
 	</template>
 	<script>
 		Polymer({
@@ -10,8 +9,7 @@
 
             },
             buscar:function(e){
-              var b = this.$.btnBuscar.query;
-              alert("listos para buscar: " + b);
+              var query = this.$.btnBuscar.query;
             }
         });
 	</script>

@@ -2,9 +2,13 @@
 <link rel="import" href="../css/coaprendamos-style.html">
 <link rel="import" href="coa-search.html">
 <template id="tmpCoaList">
-    <coa-search></coa-search>
     <style include="about-estilo"></style>
     <style include="kudos"></style>
+    <paper-search-bar id="btnBuscar"
+      placeholder="Buscar..."
+      disable-filter-button=true
+      hide-filter-button=true
+      on-paper-search-search="buscar"  >
     <div class="card">
         <h1>hola</h1>
         <p>hola</p>
@@ -42,6 +46,21 @@
                 self.push('retos', reto);
             });
         });
+    },
+    buscar:function(){
+      var query = this.$.btnBuscar.query;
+      var self = this;
+      firebase.database().ref('retos').once('value').then(function (snapshot){
+          self.retos = [];
+          snapshot.forEach(function(element) {            
+              var reto = element.val();
+              if(reto.descripcion.indexOf(query) !== -1){
+                console.log(reto);
+                reto.creator = element.val().creator;
+                self.push('retos', reto);
+              }
+          });
+      });
     }
   });
 </script>
