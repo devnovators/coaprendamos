@@ -1,12 +1,33 @@
 <dom-module id="coa-post">
+    <custom-style>
+      <style is="custom-style">
+        paper-fab.blue {
+          --paper-fab-background: var(--paper-light-blue-500);
+          --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+        }
+      </style>
+    </custom-style>
 	<template>
     <!-- buscador -->
 		<div id = "lyt-buscador">
+      <paper-search-bar id="btnBuscar" placeholder="Buscar retos..." disable-filter-button=true
+      hide-filter-button=true on-paper-search-search="buscar"  >
 
+      </paper-search-bar>
     </div>
     <!-- lista de retos -->
     <div id = "lyt-retos">
-    <paper-fab icon="favorite" title="heart"></paper-fab>
+    <paper-button raised on-click="chatbot">ChatBot</paper-button>
+    <paper-fab icon="add" title="Reto" class="blue" onclick="modal.open()"></paper-fab>
+    <paper-dialog id="modal">
+      <paper-input always-float-label label="Yo Lobito quiero"></paper-input>
+      <paper-input always-float-label label="Para"></paper-input>
+      <paper-input always-float-label label="y ofrezco"></paper-input>
+      <div class="buttons">
+        <paper-button raised dialog-confirm>Cerrar</paper-button>
+        <paper-button raised dialog-confirm>Lanzar Reto</paper-button>
+      </div>
+    </paper-dialog>
     </div>
 	</template>
 	<script>
@@ -14,6 +35,10 @@
             is: 'coa-post',
             ready:function() {
 
+            },
+            chatbot:function(e) {
+                var btnCard = Polymer.dom(e).localTarget;
+                this.fire('showChatbot', btnCard);
             }
         });
 	</script>

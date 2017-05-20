@@ -34,39 +34,53 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
+<link rel="import" href="../bower_components/paper-search/paper-search-bar.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="coa-post.html">
 <link rel="import" href="coa-about.html">
 <link rel="import" href="coa-bot.html">
+<link rel="import" href="coa-list.html">
+<link rel="import" href="coa-search.html">
 <dom-module id="coa-app">
     <template>
         <style is="custom-style">
-            :host {
-            --app-primary-color: #094FA4; /*#4285f4;*/
-            --app-secondary-color: black;
+             :host {
+                --app-primary-color: #094FA4;
+                /*#4285f4;*/
+                --app-secondary-color: black;
                 display: block;
                 height: 100vh;
             }
+
             app-header {
                 color: #fff;
                 background-color: var(--app-primary-color);
             }
+
             app-header paper-icon-button {
                 --paper-icon-button-ink-color: white;
             }
-            .logo{
+
+            .logo {
                 color: #9BE1FB;
             }
+
             paper-button.green {
-              background-color: #4285f4;
-              color: white;
+                background-color: #4285f4;
+                color: white;
             }
+
             .chatbot {
-              background: #ffffff;
-              height: 90vh;
+                background: #ffffff;
+                height: 90vh;
+            }
+
+            paper-fab.blue {
+                --paper-fab-background: var(--paper-light-blue-500);
+                --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
             }
         </style>
-    	<div hidden$="{{logged}}" width="100%" style="text-align:center; margin-top:20%;">
+        <div hidden$="{{logged}}" width="100%" style="text-align:center; margin-top:20%;">
             Bienvenid@ a Coaprendamos!, para poder hackear tu educación debes identificarte:<br /> <br />
             <paper-button class="green" raised on-click="signInWithGoogle">
                 <iron-icon icon="perm-identity"></iron-icon>
@@ -93,23 +107,34 @@
                 <coa-bot id="chbot" class="chbot" style="display:none"></coa-bot>
             </app-header-layout>
         </div>
+        <coa-list id="list" style="display:none"></coa-list>
+        <paper-fab icon="add" title="Reto" class="blue" onclick="modal.open()"></paper-fab>
+        <paper-dialog id="modal">
+            <paper-input always-float-label label="Yo Lobito quiero"></paper-input>
+            <paper-input always-float-label label="Para"></paper-input>
+            <paper-input always-float-label label="y ofrezco"></paper-input>
+            <div class="buttons">
+                <paper-button raised dialog-confirm>Cerrar</paper-button>
+                <paper-button raised dialog-confirm>Lanzar Reto</paper-button>
+            </div>
+        </paper-dialog>
     </template>
     <script src="https://www.gstatic.com/firebasejs/3.0.4/firebase.js"></script>
     <script>
         Polymer({
             is: 'coa-app',
             properties: {
-                logged      : { type : Boolean, notify : true }, // Is Authenticated by Google?
-                user        : { type : Object, notify : true },   // User Logged In
-                userName    : { type : String, notify : true },
-                userEmail   : { type : String, notify : true, observer : '_userEmailChanged' },
-                userPicture : { type : String, notify : true }
+                logged: { type: Boolean, notify: true }, // Is Authenticated by Google?
+                user: { type: Object, notify: true },   // User Logged In
+                userName: { type: String, notify: true },
+                userEmail: { type: String, notify: true, observer: '_userEmailChanged' },
+                userPicture: { type: String, notify: true }
             },
-            _userEmailChanged:function(newVal, oldVal) {
+            _userEmailChanged: function (newVal, oldVal) {
                 console.log('_userEmailChanged newVal:' + newVal + ' oldVal:' + oldVal);
             },
-            ready:function() {
-                //this.addEventListener('showChatbot', this.showChatbot);
+            ready: function () {
+                this.addEventListener('showChatbot', this.showChatbot);
                 firebase.initializeApp({
                     apiKey: "AIzaSyDHQtnQ83qy_ORmxto8A2P63KW9iW0tfZM",
                     authDomain: "coaprendamos.firebaseapp.com",
@@ -117,7 +142,7 @@
                     storageBucket: "coaprendamos.appspot.com",
                 });
                 var parent = this;
-                firebase.auth().onAuthStateChanged(function(account) {
+                firebase.auth().onAuthStateChanged(function (account) {
                     console.log('onAuthStateChanged');
                     if (account) {
                         console.log('account');
@@ -128,21 +153,23 @@
                         parent.$.post.userFirstName = account.displayName.split(' ')[0];
                         parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
                         parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
-                        parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
-                        parent.showPost();
+                        parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g, '_');
+                        parent.$.list.getRetos();
+                        parent.showRetos();
+                        //parent.showPost();
                     }
                 });
             },
-            signInWithGoogle:function() {
+            signInWithGoogle: function () {
                 console.log('signInWithGoogle');
                 if (!firebase.auth().currentUser) {
                     console.log('!firebase.auth().currentUser');
                     var provider = new firebase.auth.GoogleAuthProvider();
                     var parent = this;
-                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                    firebase.auth().signInWithPopup(provider).then(function (result) {
                         parent.set('logged', true);
                         parent.showPost();
-                    }).catch(function(error) { //error.code //error.message //error.credential
+                    }).catch(function (error) { //error.code //error.message //error.credential
                         if (error.code === 'auth/account-exists-with-different-credential') {
                             alert('You have already signed up with a different auth provider for that email.');
                         } else {
@@ -153,29 +180,34 @@
                     //firebase.auth().signOut();
                 }
             },
-            showPost:function() {
-                if (this.logged){
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+            showRetos: function () {
+                if (this.logged) {
+                    this.$.list.style.display = "block"; this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
                 }
             },
-            showAbout:function() {
-                if (this.logged){
-                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none";
+            showPost: function () {
+                if (this.logged) {
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
                 }
             },
-            showChatbot:function() {
-                if (this.logged){
-                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";
+            showAbout: function () {
+                if (this.logged) {
+                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                }
+            },
+            showChatbot: function () {
+                if (this.logged) {
+                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block"; this.$.list.style.display = "none";
                 }
                 this.$.chbot.initBot();
             },
-            closeChatbot:function() {
-                if (this.logged){
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+            closeChatbot: function () {
+                if (this.logged) {
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
                 }
                 this.$.chbot.closeBot();
             },
-            signOut:function() {
+            signOut: function () {
                 firebase.auth().signOut();
                 this.set('logged', false);
             }

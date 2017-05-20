@@ -1,27 +1,49 @@
 <dom-module id="coa-list">
-<link rel="import" href="../css/coaprendamos-style.html">
-<template id="tmpCoaList">
-    <style include="about-estilo"></style>
-    <style include="kudos"></style>
-    <div class="card">
-        <h1>hola</h1>
-        <p>hola</p>
-        <h1>hola</h1>
-        <p>hola</p>
-        <paper-button id="kudoejemplo" class="kudo" toggles raised>
-         <iron-icon icon="hola"></iron-icon> hola
-        </paper-button><span>hola</span>
-        <h1>hola</h1>
-        <br>
-        <h1>¿Y los culpables? ¡Que pasen los... <b>Devnovators</b>!</h1>
-    </div>
-</template>
-<script>
- Polymer({
-    is: 'coa-list',
-    properties: {
-    },
-    ready: function(){}
-  });
-</script>
+    <link rel="import" href="../css/coaprendamos-style.html">
+    <link rel="import" href="coa-search.html">
+    
+    <template id="tmpCoaList">
+        <coa-search></coa-search>
+        <style include="about-estilo"></style>
+        <style include="kudos"></style>
+        <div class="card">
+
+            <template id="list" is="dom-repeat" items="{{retos}}" as="reto">
+                <paper-card style="width:100%">
+                    <p>{{reto.creator}} quiere {{reto.descripcion}} para {{reto.motivo}} y ofrece {{reto.retribucion}}</p>
+                    <paper-button toggles raised>
+                        <iron-icon icon="favorite"></iron-icon>Me apunto</paper-button>
+
+                </paper-card>
+            </template>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'coa-list',
+            properties: {
+                retos: { type: Array, notify: true },
+
+            },
+            ready: function () {
+
+            },
+            getRetos: function () {
+                var self = this;
+                firebase.database().ref('retos').once('value').then(function (snapshot) {
+                    self.retos = [];
+                    snapshot.forEach(function (element) {
+                        console.log(element.val());
+                        var reto = element.val();
+                        reto.creator = element.val().creator;
+                        reto.descripcion = element.val().descripcion;
+                        reto.motivo = element.val().motivo;
+                        reto.retribucion = element.val().retribucion;
+                        self.push('retos', reto);
+                    });
+                });
+            }
+        });
+
+    </script>
 </dom-module>
