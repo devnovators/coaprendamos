@@ -47,7 +47,7 @@
             <app-header-layout>
                 <app-header fixed>
                     <a<pp-toolbar>
-                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closeChatbot" style="display:none"></paper-icon-button>
+                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closechbot" style="display:none"></paper-icon-button>
                         <div><span style="font-size: 3.5vmin;" class="logo">Coaprendamos</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
@@ -58,8 +58,89 @@
                     </app-toolbar>
                 </app-header>
                 <coa-about id="about" style="display:none"></coa-about>
-                <coa-chbot id="chatbot" class="chatbot" style="display:none"></coa-chbot>
+                <coa-chbot id="chbot" class="chbot" style="display:none"></coa-chbot>
             </app-header-layout>
         </div>
     </template>
+    <script src="https://www.gstatic.com/firebasejs/3.0.4/firebase.js"></script>
+    <script>
+        Polymer({
+            is: 'coa-app',
+            properties: {
+                logged      : { type : Boolean, notify : true }, // Is Authenticated by Google?
+                user        : { type : Object, notify : true },   // User Logged In
+                userEmail   : { type : String, notify : true, observer : '_userEmailChanged' },
+                userName    : { type : String, notify : true },
+                userPicture : { type : String, notify : true }
+            },
+            _userEmailChanged:function(newVal, oldVal) {
+                console.log('_userEmailChanged newVal:' + newVal + ' oldVal:' + oldVal);
+            },
+            ready:function() {
+                //this.addEventListener('showchbot', this.showchbot);
+                firebase.initializeApp({
+                    apiKey: "AIzaSyDHQtnQ83qy_ORmxto8A2P63KW9iW0tfZM",
+                    authDomain: "coaprendamos.firebaseapp.com",
+                    databaseURL: "https://coaprendamos.firebaseio.com",
+                    storageBucket: "coaprendamos.appspot.com",
+                });
+                var parent = this;
+                firebase.auth().onAuthStateChanged(function(account) {
+                    if (account) {
+                        parent.set('user', account);
+                        parent.set('userEmail', account.email);
+                        parent.$.cards.userFirstName = account.displayName.split(' ')[0];
+                        parent.$.cards.userPicture = account.photoURL || '../images/avatar_login.png';
+                        parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
+                        parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
+                        parent.set('userName', account.displayName);
+                        parent.set('userPicture', account.photoURL);
+                        parent.set('logged', true);
+                        firebase.database().ref("???").once("value").then(function(snapshot) {
+                            var activo = snapshot.val(); //console.log('activo:'+activo);
+                            parent.set('activeEvent', activo); //console.log('parent.activeEvent:', parent.activeEvent);
+                            parent.$.cards.activeEvent = activo;
+                            parent.$.stats.activeEvent = activo;
+                            parent.$.cards.getKudos(); //load data
+                            parent.showCards();
+                            firebase.database().ref("/???/"+activo).once("value").then(function(snapshot) {
+                                var nombre = snapshot.val().name; //console.log('nombre:'+nombre);
+                                parent.set('eventName', nombre); //console.log('parent.eventName:', parent.eventName);
+                            });
+                        });
+                    }
+                });
+            },
+            signInWithGoogle:function() {
+                if (!firebase.auth().currentUser) {
+                    var provider = new firebase.auth.GoogleAuthProvider();
+                    var parent = this;
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                        parent.set('logged', true);
+                        parent.showCards();
+                    }).catch(function(error) { //error.code //error.message //error.credential
+                        if (error.code === 'auth/account-exists-with-different-credential') {
+                            alert('You have already signed up with a different auth provider for that email.');
+                        } else {
+                            console.log('error : ' + error);
+                        }
+                    });
+                } else {
+                    //firebase.auth().signOut();
+                }
+            },
+            showAbout:function() {
+                if(this.logged){
+                    this.$.cards.style.display = "none";
+                    this.$.stats.style.display = "none";
+                    this.$.about.style.display = "block";
+                    this.$.chbot.style.display = "none";
+                }
+            },
+            signOut:function() {
+                firebase.auth().signOut();
+                this.set('logged', false);
+            }
+        });
+    </script>
 </dom-module>
