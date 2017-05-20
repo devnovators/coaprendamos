@@ -1,6 +1,6 @@
 {
   "entrypoint": "index.html",
-  "shell": "components/kudos-app.html",
+  "shell": "components/coa-app.html",
   "fragments": [
   ],
   "sourceGlobs": [
