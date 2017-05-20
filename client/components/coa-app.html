@@ -34,9 +34,12 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
+<link rel="import" href="../bower_components/paper-search/paper-search-bar.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="coa-post.html">
 <link rel="import" href="coa-bot.html">
+<link rel="import" href="coa-list.html">
+<link rel="import" href="coa-search.html">
 <dom-module id="coa-app">
     <template>
         <style is="custom-style">
@@ -86,11 +89,13 @@
                         <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
                     </app-toolbar>
                 </app-header>
+
                 <coa-post id="post" style="display:none"></coa-post>
                 <coa-about id="about" style="display:none"></coa-about>
                 <coa-bot id="chbot" class="chbot" style="display:none"></coa-bot>
             </app-header-layout>
         </div>
+        <coa-list id="list" style="display:none"></coa-list>
     </template>
     <script src="https://www.gstatic.com/firebasejs/3.0.4/firebase.js"></script>
     <script>
@@ -127,7 +132,9 @@
                         parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
                         parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
                         parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
-                        parent.showPost();
+                        parent.$.list.getRetos();
+                        parent.showRetos();
+                        //parent.showPost();
                     }
                 });
             },
@@ -151,25 +158,30 @@
                     //firebase.auth().signOut();
                 }
             },
+            showRetos:function() {
+                if (this.logged){
+                    this.$.list.style.display = "block";this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                }
+            },
             showPost:function() {
                 if (this.logged){
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";this.$.list.style.display = "none";
                 }
             },
             showAbout:function() {
                 if (this.logged){
-                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none";
+                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none";this.$.list.style.display = "none";
                 }
             },
             showChatbot:function() {
                 if (this.logged){
-                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";
+                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";this.$.list.style.display = "none";
                 }
                 this.$.chbot.initBot();
             },
             closeChatbot:function() {
                 if (this.logged){
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";this.$.list.style.display = "none";
                 }
                 this.$.chbot.closeBot();
             },
