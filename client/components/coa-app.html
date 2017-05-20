@@ -63,7 +63,7 @@
             }
         </style>
     	<div hidden$="{{logged}}" width="100%" style="text-align:center; margin-top:20%;">
-            Bienvenid@ a Coaprendamos!, para poder hackear tu educación debes identificarte:<br>
+            Bienvenid@ a Coaprendamos!, para poder hackear tu educación debes identificarte:<br /> <br />
             <paper-button class="green" raised on-click="signInWithGoogle">
                 <iron-icon icon="perm-identity"></iron-icon>
                 Ingresar con mi cuenta Google
@@ -74,7 +74,7 @@
                 <app-header fixed>
                     <app-toolbar>
                         <paper-icon-button icon="arrow-back" id="mBack" on-tap="closechbot" style="display:none"></paper-icon-button>
-                        <div><span style="font-size: 3.5vmin;" class="logo">Coaprendamos</span></div>
+                        <div><span style="font-size: 3.5vmin;" class="logo">coAPRENDAMOS.pe! &nbsp;&nbsp;&nbsp;#AprenderEsSexy</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
                         <paper-icon-button icon="help"        id="mHelp"   title="Acerca de"    on-tap="showAbout"></paper-icon-button>
@@ -104,7 +104,7 @@
                 console.log('_userEmailChanged newVal:' + newVal + ' oldVal:' + oldVal);
             },
             ready:function() {
-                //this.addEventListener('showchbot', this.showchbot);
+                this.addEventListener('showChatbot', this.showChatbot);
                 firebase.initializeApp({
                     apiKey: "AIzaSyDHQtnQ83qy_ORmxto8A2P63KW9iW0tfZM",
                     authDomain: "coaprendamos.firebaseapp.com",
@@ -125,18 +125,6 @@
                         parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
                         parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g,'_');
                         parent.showPost();
-                        /*firebase.database().ref("???").once("value").then(function(snapshot) {
-                            var activo = snapshot.val(); //console.log('activo:'+activo);
-                            parent.set('activeEvent', activo); //console.log('parent.activeEvent:', parent.activeEvent);
-                            parent.$.post.activeEvent = activo;
-                            parent.$.stats.activeEvent = activo;
-                            parent.$.cards.getKudos(); //load data
-                            parent.showCards();
-                            firebase.database().ref("/???/"+activo).once("value").then(function(snapshot) {
-                                var nombre = snapshot.val().name; //console.log('nombre:'+nombre);
-                                parent.set('eventName', nombre); //console.log('parent.eventName:', parent.eventName);
-                            });
-                        });*/
                     }
                 });
             },
@@ -161,18 +149,26 @@
                 }
             },
             showPost:function() {
-                if(this.logged){
-                    this.$.post.style.display = "block";
-                    this.$.about.style.display = "none";
-                    this.$.chbot.style.display = "none";
+                if (this.logged){
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
                 }
             },
             showAbout:function() {
-                if(this.logged){
-                    this.$.list.style.display = "none";
-                    this.$.about.style.display = "block";
-                    this.$.chbot.style.display = "none";
+                if (this.logged){
+                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none";
                 }
+            },
+            showChatbot:function(event) {
+                if (this.logged){
+                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";
+                }
+                this.$.chbot.initBot(event.detail);
+            },
+            closeChatbot:function() {
+                if (this.logged){
+                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
+                }
+                this.$.chbot.closeBot();
             },
             signOut:function() {
                 firebase.auth().signOut();
