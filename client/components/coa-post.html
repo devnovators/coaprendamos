@@ -1,22 +1,19 @@
-<dom-module>
+<dom-module id="coa-post">
 	<template>
-		
+    <!-- buscador -->
+		<div id = "lyt-buscador">
+
+    </div>
+    <!-- lista de retos -->
+    <div id = "lyt-retos">
+    <paper-fab icon="favorite" title="heart"></paper-fab>
+    </div>
 	</template>
 	<script>
 		Polymer({
-            is: 'coa-app',
-            properties: {
-                logged      : { type : Boolean, notify : true }, // Is Authenticated by Google?
-                user        : { type : Object, notify : true },   // User Logged In
-                userName    : { type : String, notify : true },
-                userEmail   : { type : String, notify : true, observer : '_userEmailChanged' },
-                userPicture : { type : String, notify : true }
-            },
-            _userEmailChanged:function(newVal, oldVal) {
-                console.log('_userEmailChanged newVal:' + newVal + ' oldVal:' + oldVal);
-            },
+            is: 'coa-post',
             ready:function() {
-            	
+
             }
         });
 	</script>
