@@ -93,7 +93,7 @@
                         <div><span style="font-size: 3.5vmin;" class="logo">coAPRENDAMOS.pe! &nbsp;&nbsp;&nbsp;#AprenderEsSexy</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
                         <div main-title></div>
-                        <paper-icon-button icon="find-in-page" id="mBot" title="Bot" on-tap="showChatbot"></paper-icon-button>
+                        <paper-icon-button icon="find-in-page" id="mBot" title="Bot" on-tap="showRetos"></paper-icon-button>
                         <paper-icon-button icon="help" id="mHelp" title="Acerca de" on-tap="showAbout"></paper-icon-button>
                         <paper-icon-button icon="exit-to-app" id="mExit" title="Salir" on-tap="signOut"></paper-icon-button>
                         <paper-tooltip for="mHelp" position="bottom" style="max-width:100px;">Ayuda</paper-tooltip>
@@ -147,13 +147,17 @@
                         parent.set('user', account);
                         parent.set('userName', account.displayName.split(' ')[0])
                         parent.set('userEmail', account.email);
-                        parent.$.post.userFirstName = account.displayName.split(' ')[0];
-                        parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
+                          console.log('set');
+                        //parent.$.post.userFirstName = account.displayName.split(' ')[0];
+                        //parent.$.post.userPicture = account.photoURL || '../images/avatar_login.png';
+                        console.log('post');
                         parent.$.chbot.userFirstName = account.displayName.split(' ')[0];
                         parent.$.chbot.userEmail = account.email.toString().replace(/[@.]/g, '_');
+                        console.log('chbot');
                         parent.$.list.getRetos();
+                          console.log('getRetos');
                         parent.showRetos();
-                        //parent.showPost();
+                        console.log('showRetos');
                     }
                 });
             },
@@ -165,7 +169,7 @@
                     var parent = this;
                     firebase.auth().signInWithPopup(provider).then(function (result) {
                         parent.set('logged', true);
-                        parent.showPost();
+                        parent.showRetos();
                     }).catch(function (error) { //error.code //error.message //error.credential
                         if (error.code === 'auth/account-exists-with-different-credential') {
                             alert('You have already signed up with a different auth provider for that email.');
@@ -178,29 +182,29 @@
                 }
             },
             showRetos: function () {
+
                 if (this.logged) {
-                    this.$.list.style.display = "block"; this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
-                }
-            },
-            showPost: function () {
-                if (this.logged) {
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                  console.log("showRetos");
+                    this.$.list.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
                 }
             },
             showAbout: function () {
                 if (this.logged) {
-                    this.$.post.style.display = "none"; this.$.about.style.display = "block"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                  console.log("showAbout");
+                    this.$.list.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none";
                 }
             },
             showChatbot: function () {
                 if (this.logged) {
-                    this.$.post.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block"; this.$.list.style.display = "none";
+                  console.log("showChatbot");
+                    this.$.list.style.display = "none"; this.$.about.style.display = "none"; this.$.chbot.style.display = "block";
                 }
                 this.$.chbot.initBot();
             },
             closeChatbot: function () {
                 if (this.logged) {
-                    this.$.post.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; this.$.list.style.display = "none";
+                  console.log("closeChatbot");
+                    this.$.list.style.display = "block"; this.$.about.style.display = "none"; this.$.chbot.style.display = "none"; 
                 }
                 this.$.chbot.closeBot();
             },
