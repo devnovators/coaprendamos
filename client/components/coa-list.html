@@ -4,18 +4,13 @@
     <style include="about-estilo"></style>
     <style include="kudos"></style>
     <div class="card">
-        <h1>hola</h1>
-        <p>hola</p>
-        <h1>hola</h1>
-        <p>hola</p>
-        <paper-button id="kudoejemplo" class="kudo" toggles raised>
-         <iron-icon icon="hola"></iron-icon> hola
-        </paper-button><span>hola</span>
-        <h1>hola</h1>
-        <br>
-        <h1>¿Y los culpables? ¡Que pasen los... <b>Devnovators</b>!</h1>
+        
         <template id="list" is="dom-repeat" items="{{retos}}" as="reto">
-            <p>{{reto.creator}}</p>
+            <paper-card style="width:100%">
+            <p>{{reto.creator}} quiere {{reto.descripcion}} para {{reto.motivo}} y ofrece {{reto.retribucion}}</p>
+            <paper-button toggles raised><iron-icon icon="favorite"></iron-icon>Me apunto</paper-button>
+
+            </paper-card>
         </template>
     </div>
 </template>
@@ -37,6 +32,9 @@
                 console.log(element.val());
                 var reto = element.val();
                 reto.creator = element.val().creator;
+                reto.descripcion = element.val().descripcion;
+                reto.motivo = element.val().motivo;
+                reto.retribucion = element.val().retribucion;
                 self.push('retos', reto);
             });
         });
