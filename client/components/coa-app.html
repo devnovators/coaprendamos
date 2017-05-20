@@ -35,5 +35,31 @@
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
 <dom-module id="coaprendamos-app">
-    
+    <template>
+    	<div hidden$="{{logged}}" width="100%" style="text-align:center; margin-top:20%;">
+            Bienvenid@ a Coaprendamos!, para poder hackear tu educación debes identificarte:<br>
+            <paper-button class="green" raised on-click="signInWithGoogle">
+                <iron-icon icon="perm-identity"></iron-icon>
+                Ingresar con mi cuenta Google
+            </paper-button>
+        </div>
+        <div hidden$="{{!logged}}" width="100%" style="text-align:center;">
+            <app-header-layout>
+                <app-header fixed>
+                    <a<pp-toolbar>
+                        <paper-icon-button icon="arrow-back" id="mBack" on-tap="closeChatbot" style="display:none"></paper-icon-button>
+                        <div><span style="font-size: 3.5vmin;" class="logo">Coaprendamos</span></div>
+                        <iron-icon icon="icons:events"></iron-icon>
+                        <div main-title></div>
+                        <paper-icon-button icon="help"        id="mHelp"   title="Acerca de"    on-tap="showAbout"></paper-icon-button>
+                        <paper-icon-button icon="exit-to-app" id="mExit"   title="Salir"        on-tap="signOut"  ></paper-icon-button>
+                        <paper-tooltip for="mHelp"   position="bottom" style="max-width:100px;">Ayuda</paper-tooltip>
+                        <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
+                    </app-toolbar>
+                </app-header>
+                <coa-about id="about" style="display:none"></coa-about>
+                <coa-chbot id="chatbot" class="chatbot" style="display:none"></coa-chbot>
+            </app-header-layout>
+        </div>
+    </template>
 </dom-module>
