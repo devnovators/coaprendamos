@@ -46,7 +46,7 @@
         <div hidden$="{{!logged}}" width="100%" style="text-align:center;">
             <app-header-layout>
                 <app-header fixed>
-                    <a<pp-toolbar>
+                    <app-toolbar>
                         <paper-icon-button icon="arrow-back" id="mBack" on-tap="closechbot" style="display:none"></paper-icon-button>
                         <div><span style="font-size: 3.5vmin;" class="logo">Coaprendamos</span></div>
                         <iron-icon icon="icons:events"></iron-icon>
@@ -57,6 +57,7 @@
                         <paper-tooltip for="mExit"   position="bottom" style="max-width:100px;">Salir</paper-tooltip>
                     </app-toolbar>
                 </app-header>
+                <coa-list id="list" style="display:none"></coa-list>
                 <coa-about id="about" style="display:none"></coa-about>
                 <coa-chbot id="chbot" class="chbot" style="display:none"></coa-chbot>
             </app-header-layout>
@@ -99,10 +100,7 @@
                         firebase.database().ref("???").once("value").then(function(snapshot) {
                             var activo = snapshot.val(); //console.log('activo:'+activo);
                             parent.set('activeEvent', activo); //console.log('parent.activeEvent:', parent.activeEvent);
-                            parent.$.cards.activeEvent = activo;
-                            parent.$.stats.activeEvent = activo;
-                            parent.$.cards.getKudos(); //load data
-                            parent.showCards();
+                            parent.showList();
                             firebase.database().ref("/???/"+activo).once("value").then(function(snapshot) {
                                 var nombre = snapshot.val().name; //console.log('nombre:'+nombre);
                                 parent.set('eventName', nombre); //console.log('parent.eventName:', parent.eventName);
@@ -117,7 +115,7 @@
                     var parent = this;
                     firebase.auth().signInWithPopup(provider).then(function(result) {
                         parent.set('logged', true);
-                        parent.showCards();
+                        parent.showList();
                     }).catch(function(error) { //error.code //error.message //error.credential
                         if (error.code === 'auth/account-exists-with-different-credential') {
                             alert('You have already signed up with a different auth provider for that email.');
@@ -129,10 +127,16 @@
                     //firebase.auth().signOut();
                 }
             },
+            showList:function() {
+                if(this.logged){
+                    this.$.list.style.display = "block";
+                    this.$.about.style.display = "none";
+                    this.$.chbot.style.display = "none";
+                }
+            },
             showAbout:function() {
                 if(this.logged){
-                    this.$.cards.style.display = "none";
-                    this.$.stats.style.display = "none";
+                    this.$.list.style.display = "none";
                     this.$.about.style.display = "block";
                     this.$.chbot.style.display = "none";
                 }
